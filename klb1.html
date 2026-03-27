@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KienlongBank - Robo Advisor Tư Vấn Vay Vốn</title>
+    <style>
+        :root {
+            --klb-blue: #002888;
+            /* Màu xanh đặc trưng của KienlongBank */
+            --klb-light: #e9f0fe;
+            --klb-accent: #f26522;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: var(--klb-blue);
+            text-align: center;
+            padding: 20px;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .header img {
+            max-height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: var(--klb-blue);
+            border-bottom: 2px solid var(--klb-light);
+            padding-bottom: 10px;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        select,
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        .radio-group label {
+            display: inline-block;
+            font-weight: normal;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+            accent-color: var(--klb-blue);
+        }
+
+        .slider-val {
+            font-weight: bold;
+            color: var(--klb-accent);
+            font-size: 16px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background-color: var(--klb-blue);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #001f66;
+        }
+
+        .btn-secondary {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #bbb;
+        }
+
+        .result-box {
+            background-color: var(--klb-light);
+            padding: 20px;
+            border-left: 5px solid var(--klb-blue);
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .result-box ul {
+            padding-left: 20px;
+        }
+
+        .result-box li {
+            margin-bottom: 8px;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <img src="image_8683ab.png" alt="KienlongBank Logo">
+        <h1>Hệ Thống Robo-Advisor Cá Nhân</h1>
+        <p>Giải pháp tư vấn tài chính tự động 24/7</p>
+    </div>
+
+    <div class="container">
+
+        <div id="step1" class="step active">
+            <h2>Bước 1: Chân dung khách hàng</h2>
+            <div class="form-group">
+                <label>Giới tính của Anh/Chị:</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="gender" value="Nam" checked> Nam</label>
+                    <label><input type="radio" name="gender" value="Nữ"> Nữ</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Độ tuổi của Anh/Chị thuộc nhóm nào?</label>
+                <select id="ageGroup">
+                    <option value="duoi25">Dưới 25 tuổi</option>
+                    <option value="25-40">Từ 25 - 40 tuổi (Nhóm ưu đãi "Khách hàng trẻ")</option>
+                    <option value="tren40">Trên 40 tuổi</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Anh/Chị đang công tác hoặc thuộc hội đoàn nào?</label>
+                <select id="occupation">
+                    <option value="hcsn">Hành chính sự nghiệp / Y tế / Giáo dục</option>
+                    <option value="hoi_doan">Cán bộ Hội Phụ nữ / Hội Nông dân</option>
+                    <option value="kinh_doanh">Chủ hộ kinh doanh / Chủ doanh nghiệp</option>
+                    <option value="khac">Khác (Lao động tự do, nhân viên công ty tư nhân...)</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <div></div>
+                <button class="btn" onclick="nextStep(1, 2)">Tiếp theo ➔</button>
+            </div>
+        </div>
+
+        <div id="step2" class="step">
+            <h2>Bước 2: Hình thức vay & Phân luồng sản phẩm</h2>
+            <div class="form-group">
+                <label>Anh/Chị muốn vay theo hình thức nào?</label>
+                <select id="loanType" onchange="toggleLoanOptions()">
+                    <option value="the_chap">Vay thế chấp (Có sổ đỏ, sổ hồng, ô tô...)</option>
+                    <option value="tin_chap">Vay tín chấp/Thấu chi (Dựa trên uy tín và lương)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="theChapOptions">
+                <label>Chọn sản phẩm vay thế chấp phù hợp:</label>
+                <select id="theChapProduct">
+                    <option value="sxkd">Vay SXKD: Hỗ trợ vốn lưu động/đầu tư</option>
+                    <option value="doi_song">Vay Đời sống: Đáp ứng nhu cầu tiêu dùng</option>
+                    <option value="mua_xe">Vay Mua xe ô tô: Tài trợ đi lại, vận tải</option>
+                    <option value="xay_dung">Vay Xây dựng/Sửa chữa: Kiến thiết nhà ở</option>
+                    <option value="bds">Vay Mua/Bán BĐS: Thời hạn lên đến 35-55 năm</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="tinChapOptions" style="display: none;">
+                <label>Anh/Chị thuộc nhóm đối tượng ưu tiên nào?</label>
+                <select id="tinChapProduct">
+                    <option value="to_chuc">Tổ chức đoàn thể: Gói vay Hội Phụ nữ, Nông dân</option>
+                    <option value="dac_thu">Ngành nghề đặc thù: Khối HCSN hoặc hộ Trồng lúa</option>
+                    <option value="dong_tien">Dòng tiền ổn định: Cán bộ Y tế, Giáo dục, Chi lương</option>
+                </select>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="nextStep(2, 1)">🡄 Quay lại</button>
+                <button class="btn" onclick="nextStep(2, 3)">Tiếp theo ➔</button>
+            </div>
+        </div>
+
+        <div id="step3" class="step">
+            <h2>Bước 3: Năng lực tài chính</h2>
+            <p class="note">Sử dụng thanh trượt để Robot tính toán tỷ lệ DTI (tối đa 50-60%) và LTV (tối đa 73-75%).</p>
+
+            <div class="form-group">
+                <label>Tổng thu nhập hàng tháng của Anh/Chị:</label>
+                <select id="incomeGroup">
+                    <option value="duoi10">Dưới 10tr / tháng</option>
+                    <option value="10-20">Từ 10 - 20tr / tháng</option>
+                    <option value="tren20">Trên 20tr / tháng</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Số tiền đang trả nợ hàng tháng cho các khoản vay khác (nếu có):</label>
+                <input type="range" id="existingDebt" min="0" max="50" step="1" value="3"
+                    oninput="updateSlider('existingDebt', 'debtVal', ' Triệu VNĐ')">
+                <span class="slider-val" id="debtVal">3 Triệu VNĐ</span>
+            </div>
+
+            <div class="form-group" id="collateralGroup">
+                <label>Giá trị tài sản đảm bảo dự kiến (nếu vay thế chấp):</label>
+                <input type="range" id="collateralValue" min="0.5" max="50" step="0.5" value="3"
+                    oninput="updateSlider('collateralValue', 'colVal', ' Tỷ VNĐ')">
+                <span class="slider-val" id="colVal">3 Tỷ VNĐ</span>
+            </div>
+
+            <div class="form-group">
+                <label>Số tiền Anh/Chị muốn vay bao nhiêu?</label>
+                <input type="range" id="loanAmount" min="0.1" max="10" step="0.1" value="1"
+                    oninput="updateSlider('loanAmount', 'loanVal', ' Tỷ VNĐ')">
+                <span class="slider-val" id="loanVal">1 Tỷ VNĐ</span>
+            </div>
+
+            <div class="form-group">
+                <label>Anh/Chị có từng phát sinh nợ quá hạn (nợ xấu) trong 2 năm gần nhất không?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="badDebt" value="Có"> Có</label>
+                    <label><input type="radio" name="badDebt" value="Không" checked> Không</label>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="nextStep(3, 2)">🡄 Quay lại</button>
+                <button class="btn" onclick="nextStep(3, 4)">Tiếp theo ➔</button>
+            </div>
+        </div>
+
+        <div id="step4" class="step">
+            <h2>Bước 4: Lựa chọn ưu đãi lãi suất</h2>
+            <div class="form-group">
+                <label>Anh/Chị muốn ưu đãi lãi suất trong giai đoạn đầu bao lâu?</label>
+                <select id="interestPref">
+                    <option value="3th">3 tháng (Lãi suất thấp nhất, từ 3,9%)</option>
+                    <option value="9th">9 tháng (Ổn định trung hạn)</option>
+                    <option value="18th">18 - 24 tháng (Dành cho khoản vay dài hạn)</option>
+                </select>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="nextStep(4, 3)">🡄 Quay lại</button>
+                <button class="btn" onclick="generateResult()">Xem Đề Xuất Hồ Sơ ➔</button>
+            </div>
+        </div>
+
+        <div id="step5" class="step">
+            <h2>Kết Quả Phân Tích & Đề Xuất</h2>
+            <p>Dựa trên các thông tin Anh/Chị đã cung cấp, để đẩy nhanh quá trình phê duyệt tại KienlongBank, Anh/Chị
+                vui lòng chuẩn bị các nhóm giấy tờ sau:</p>
+
+            <div class="result-box">
+                <h3>1. Hồ sơ Pháp lý (Bắt buộc)</h3>
+                <ul>
+                    <li>Chứng minh nhân thân: CCCD gắn chip còn hiệu lực của người vay và người hôn phối (nếu có).</li>
+                    <li>Tình trạng hôn nhân: Giấy đăng ký kết hôn hoặc Giấy xác nhận tình trạng độc thân.</li>
+                </ul>
+
+                <h3>2. Hồ sơ Nguồn thu nhập</h3>
+                <ul id="incomeDocs">
+                </ul>
+
+                <h3 id="purposeTitle">3. Hồ sơ Mục đích vay & Tài sản đảm bảo</h3>
+                <ul id="purposeDocs">
+                </ul>
+
+                <h3>💡 Ghi chú quan trọng từ Robot Advisor</h3>
+                <ul>
+                    <li><strong>Ưu đãi đặc biệt:</strong> Nếu là khách hàng mới, Anh/Chị có thể được cấp thêm hạn mức
+                        thẻ tín dụng lên đến 10% giá trị Bất động sản thế chấp.</li>
+                    <li><strong>Lưu ý về Phí:</strong> Trả nợ trước hạn dao động từ 0.5% - 2.5% tùy gói và thời gian,
+                        miễn phí sau 48 tháng.</li>
+                </ul>
+            </div>
+
+            <div class="result-box" style="background-color: #eaf8e6; border-color: #4caf50;">
+                <h3>Bước tiếp theo:</h3>
+                <p>Anh/Chị muốn thực hiện bước nào tiếp theo?</p>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn" style="background-color: #4caf50;">Gửi vị trí Chi nhánh gần nhất</button>
+                    <button class="btn" style="background-color: var(--klb-accent);">Kết nối chuyên viên thẩm định
+                        Online</button>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="nextStep(5, 1)">Làm lại từ đầu 🡄</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function nextStep(current, next) {
+            document.getElementById('step' + current).classList.remove('active');
+            document.getElementById('step' + next).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function toggleLoanOptions() {
+            const loanType = document.getElementById('loanType').value;
+            if (loanType === 'the_chap') {
+                document.getElementById('theChapOptions').style.display = 'block';
+                document.getElementById('tinChapOptions').style.display = 'none';
+                document.getElementById('collateralGroup').style.display = 'block';
+            } else {
+                document.getElementById('theChapOptions').style.display = 'none';
+                document.getElementById('tinChapOptions').style.display = 'block';
+                document.getElementById('collateralGroup').style.display = 'none';
+            }
+        }
+
+        function updateSlider(sliderId, displayId, unit) {
+            const val = document.getElementById(sliderId).value;
+            document.getElementById(displayId).innerText = val + unit;
+        }
+
+        function generateResult() {
+            const occupation = document.getElementById('occupation').value;
+            const loanType = document.getElementById('loanType').value;
+            const theChapProduct = document.getElementById('theChapProduct').value;
+
+            // Logic đổ hồ sơ thu nhập
+            let incomeDocs = "";
+            if (occupation === "hcsn" || occupation === "khac") {
+                incomeDocs = `
+                    <li>Hợp đồng lao động hoặc Quyết định bổ nhiệm.</li>
+                    <li>Sao kê lương 3-6 tháng gần nhất hoặc Xác nhận công tác.</li>
+                `;
+            } else if (occupation === "kinh_doanh") {
+                incomeDocs = `
+                    <li>Giấy chứng nhận đăng ký doanh nghiệp hoặc Giấy phép kinh doanh hộ cá thể.</li>
+                    <li>Ảnh chụp địa điểm kinh doanh thực tế.</li>
+                `;
+            } else {
+                incomeDocs = `
+                    <li>Tài liệu chứng minh nguồn thu nhập hiện tại (sổ ghi chép, hợp đồng...).</li>
+                    <li>Quyết định nghỉ hưu (nếu là lương hưu) hoặc Hợp đồng đại lý/môi giới.</li>
+                `;
+            }
+            document.getElementById('incomeDocs').innerHTML = incomeDocs;
+
+            // Logic đổ hồ sơ mục đích
+            let purposeDocs = "";
+            if (loanType === "the_chap") {
+                document.getElementById('purposeTitle').style.display = "block";
+                document.getElementById('purposeDocs').style.display = "block";
+
+                if (theChapProduct === "bds") {
+                    purposeDocs += `<li><strong>Vay mua Bất động sản:</strong> Hợp đồng đặt cọc hoặc Hợp đồng mua bán chuyển nhượng.</li>`;
+                } else if (theChapProduct === "xay_dung") {
+                    purposeDocs += `<li><strong>Vay Xây dựng/Sửa chữa:</strong> Giấy phép xây dựng, Bản vẽ thiết kế hoặc Dự toán thi công.</li>`;
+                }
+                purposeDocs += `<li><strong>Hồ sơ Tài sản:</strong> Sổ hồng/Sổ đỏ (Bản photo) của tài sản dự kiến thế chấp.</li>`;
+            } else {
+                document.getElementById('purposeTitle').style.display = "none";
+                document.getElementById('purposeDocs').style.display = "none";
+            }
+            document.getElementById('purposeDocs').innerHTML = purposeDocs;
+
+            // Chuyển sang màn hình kết quả
+            nextStep(4, 5);
+        }
+    </script>
+</body>
+
+</html>
