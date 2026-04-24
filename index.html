@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KienlongBank | Robo-Advisor Cá Nhân</title>
+  <meta name="description"
+    content="Hệ thống Robo-Advisor tư vấn gợi ý sản phẩm vay cá nhân tại KienlongBank PGD Hải Châu" />
+  <link rel="icon" href="/static/assets/logo.png" type="image/png">
+  <link rel="icon" href="/static/assets/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --blue: #0b3ea8;
+      --blue2: #154fc9;
+      --blue3: #082a73;
+      --accent: #f36a21;
+      --bg: #f4f7fc;
+      --card: #ffffff;
+      --text: #10213a;
+      --muted: #6b7a90;
+      --line: #dde6f3;
+      --success: #15b36c;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 20px 60px rgba(10, 50, 130, .12);
+      --radius: 26px;
+      --radius-sm: 14px;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(21, 79, 201, .12), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(243, 106, 33, .10), transparent 30%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    /* ---- Hero ---- */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #071f57 0%, var(--blue) 45%, #1b56d6 100%);
+      color: #fff;
+      padding: 24px 16px 96px;
+      text-align: center;
+      box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .08);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(2px);
+    }
+
+    .hero::before {
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, rgba(255, 255, 255, .12), transparent 65%);
+      top: -180px;
+      right: -120px;
+    }
+
+    .hero::after {
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, rgba(255, 255, 255, .08), transparent 70%);
+      bottom: -150px;
+      left: -120px;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .12);
+      border: 1px solid rgba(255, 255, 255, .18);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #67e8a7;
+      box-shadow: 0 0 0 6px rgba(103, 232, 167, .15);
+    }
+
+    .brand {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .brand-mark {
+      width: 76px;
+      height: 76px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, .20), rgba(255, 255, 255, .06));
+      border: 1px solid rgba(255, 255, 255, .18);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .15);
+      backdrop-filter: blur(6px);
+    }
+
+    .brand-mark svg {
+      width: 44px;
+      height: 44px
+    }
+
+    .brand-name {
+      font-weight: 800;
+      font-size: 30px;
+      letter-spacing: -.7px;
+      margin: 0;
+    }
+
+    .brand-name span {
+      color: #ffcfb5
+    }
+
+    .hero h1 {
+      margin: 4px 0 8px;
+      font-size: clamp(26px, 4vw, 52px);
+      line-height: 1.05;
+      letter-spacing: -1.2px;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 16px;
+      color: rgba(255, 255, 255, .82);
+    }
+
+    /* ---- Shell & layout ---- */
+    .shell {
+      max-width: 1180px;
+      margin: -56px auto 48px;
+      padding: 0 16px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .wizard {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    /* ---- Sidebar ---- */
+    .sidebar {
+      background: rgba(255, 255, 255, .74);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(221, 230, 243, .8);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 16px;
+    }
+
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f2f7a;
+      margin-bottom: 14px;
+      letter-spacing: .2px;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 18px;
+      color: var(--muted);
+      transition: .25s ease;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .step-item:hover {
+      background: rgba(11, 62, 168, .04);
+    }
+
+    .step-item.active {
+      background: linear-gradient(135deg, rgba(11, 62, 168, .12), rgba(11, 62, 168, .04));
+      color: var(--blue);
+      border-color: rgba(11, 62, 168, .10);
+    }
+
+    .step-item.done {
+      color: var(--success);
+    }
+
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      background: #eef3fb;
+      color: var(--muted);
+      flex: 0 0 auto;
+      font-size: 14px;
+    }
+
+    .step-item.active .step-num {
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(11, 62, 168, .25);
+    }
+
+    .step-item.done .step-num {
+      background: #e8fbf2;
+      color: var(--success);
+    }
+
+    .step-num.done-icon::after {
+      content: "✓";
+    }
+
+    .step-txt {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step-txt strong {
+      font-size: 14px;
+    }
+
+    .step-txt span {
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    /* ---- Main card ---- */
+    .main {
+      background: rgba(255, 255, 255, .96);
+      border: 1px solid rgba(221, 230, 243, .95);
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .main-head {
+      padding: 28px 30px 0;
+    }
+
+    .main-head h2 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      letter-spacing: -.7px;
+      color: #0f2f7a;
+    }
+
+    .main-head p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 10px 30px 30px;
+    }
+
+    /* ---- Step panels ---- */
+    .step-panel {
+      display: none;
+      animation: fadeIn .25s ease;
+    }
+
+    .step-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin: 4px 0 4px;
+      color: #143f9a;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      margin: 0 0 22px;
+      font-size: 14px;
+    }
+
+    /* ---- Grid & fields ---- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid-1 {
+      grid-template-columns: 1fr;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .full {
+      grid-column: 1/-1;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #24334d;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1.6px solid #d7e0ee;
+      background: #f8fbff;
+      border-radius: 16px;
+      padding: 14px 15px;
+      font-size: 14px;
+      outline: none;
+      transition: .2s ease;
+      color: #12233d;
+      font-family: inherit;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #6ea0ff;
+      box-shadow: 0 0 0 4px rgba(67, 110, 247, .10);
+      background: #fff;
+    }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* ---- Radio pills ---- */
+    .radio-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      flex: 1 1 140px;
+      border: 1.6px solid #d7e0ee;
+      background: #f8fbff;
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+      transition: .2s ease;
+    }
+
+    .pill:hover {
+      border-color: #97b3eb;
+      background: #fff;
+    }
+
+    .pill input {
+      width: auto;
+      margin: 0;
+    }
+
+    .pill span {
+      font-weight: 600;
+      color: #24334d;
+    }
+
+    .pill.active {
+      border-color: rgba(11, 62, 168, .35);
+      background: rgba(11, 62, 168, .05);
+      box-shadow: 0 10px 22px rgba(11, 62, 168, .08);
+    }
+
+    .pill.active span {
+      color: var(--blue);
+    }
+
+    /* ---- Info boxes ---- */
+    .hint-box {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f1f6ff;
+      border: 1px solid #dae5fb;
+      color: #234;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .warn-box {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #8a4b00;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .error-box {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .success-box {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #ecfdf5;
+      border: 1px solid #bbf7d0;
+      color: #065f46;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    /* ---- Action buttons ---- */
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 26px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 20px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      transition: .2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 160px;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      color: #fff;
+      box-shadow: 0 14px 28px rgba(11, 62, 168, .20);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 36px rgba(11, 62, 168, .28);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: #f1f5fb;
+      color: #31415e;
+      border: 1px solid #d9e2f0;
+    }
+
+    .btn-secondary:hover {
+      background: #eaf0f8;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: #fff;
+    }
+
+    /* ---- Results ---- */
+    .result-card {
+      margin-top: 24px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+      border: 1px solid #dfe8f7;
+      overflow: hidden;
+    }
+
+    .result-head {
+      padding: 20px 24px;
+      background: linear-gradient(135deg, rgba(11, 62, 168, .08), rgba(243, 106, 33, .06));
+      border-bottom: 1px solid #e7eef8;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .result-head-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      flex: 0 0 auto;
+    }
+
+    .result-head-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .result-head-text h3 {
+      margin: 0 0 4px;
+      color: #0f2f7a;
+      font-size: 20px;
+    }
+
+    .result-head-text p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .result-body {
+      padding: 22px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric {
+      border: 1px solid #e2eaf7;
+      border-radius: 18px;
+      background: #fff;
+      padding: 16px;
+      box-shadow: 0 8px 18px rgba(10, 50, 130, .04);
+    }
+
+    .metric .k {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .metric .v {
+      font-size: 20px;
+      font-weight: 800;
+      margin-top: 6px;
+      color: #0f2f7a;
+    }
+
+    .metric .s {
+      font-size: 12px;
+      margin-top: 4px;
+      color: var(--muted);
+    }
+
+    .metric.good .v {
+      color: var(--success);
+    }
+
+    .metric.warn .v {
+      color: var(--warning);
+    }
+
+    .metric.bad .v {
+      color: var(--danger);
+    }
+
+    .metric.neutral .v {
+      color: #0f2f7a;
+    }
+
+    /* ---- Loader ---- */
+    .loader {
+      text-align: center;
+      padding: 32px;
+      color: var(--muted);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      border: 3px solid rgba(11, 62, 168, .12);
+      border-top-color: var(--blue);
+      animation: spin .9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    /* ---- Misc ---- */
+    .small-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 20px 0;
+    }
+
+    .hide {
+      display: none !important;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .3px;
+    }
+
+    .tag-blue {
+      background: #e8f0ff;
+      color: #1a4cc0;
+    }
+
+    .tag-green {
+      background: #e8fbf2;
+      color: #0a7a48;
+    }
+
+    .tag-orange {
+      background: #fff3e8;
+      color: #b05010;
+    }
+
+    .tag-red {
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    /* ---- Hero logo ---- */
+    .hero-logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border-radius: 24px;
+      padding: 14px 28px;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, .22);
+      margin-bottom: 18px;
+    }
+
+    .hero-logo {
+      height: 80px;
+      display: block;
+    }
+
+    /* ---- Document checklist ---- */
+    .doc-section {
+      margin-top: 22px;
+      border-radius: 24px;
+      border: 1px solid #dfe8f7;
+      overflow: hidden;
+    }
+
+    .doc-section-head {
+      padding: 16px 22px;
+      background: linear-gradient(135deg, rgba(11, 62, 168, .07), rgba(243, 106, 33, .05));
+      border-bottom: 1px solid #e7eef8;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .doc-section-head-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+
+    .doc-section-head-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .doc-section-head h4 {
+      margin: 0 0 2px;
+      color: #0f2f7a;
+      font-size: 17px;
+    }
+
+    .doc-section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .doc-body {
+      padding: 20px 22px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .doc-group {
+      border: 1px solid #e8f0fb;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .doc-group-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: #f4f8ff;
+      border-bottom: 1px solid #e8f0fb;
+      font-size: 14px;
+      font-weight: 800;
+      color: #143f9a;
+    }
+
+    .doc-group-title .icon {
+      font-size: 18px;
+    }
+
+    .doc-list {
+      padding: 8px 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .doc-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: #334;
+      line-height: 1.5;
+      border-bottom: 1px solid #f0f4fb;
+    }
+
+    .doc-list li:last-child {
+      border-bottom: none;
+    }
+
+    .doc-list li::before {
+      content: "•";
+      color: var(--blue);
+      font-weight: 900;
+      font-size: 16px;
+      line-height: 1.3;
+      flex: 0 0 auto;
+    }
+
+    /* ---- Footer ---- */
+    .footer {
+      text-align: center;
+      color: #7a879c;
+      font-size: 12px;
+      padding: 0 16px 28px;
+    }
+
+    /* ---- Responsive ---- */
+    @media(max-width:1020px) {
+      .wizard {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        top: auto;
+      }
+
+      .result-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media(max-width:720px) {
+      .hero {
+        padding-bottom: 72px;
+      }
+
+      .shell {
+        margin-top: -40px;
+      }
+
+      .main-head,
+      .content {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .grid,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .brand-name {
+        font-size: 24px;
+      }
+
+      .hero h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===================== HERO ===================== -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="brand">
+        <div class="hero-logo-wrap">
+          <img src="/static/assets/logo.png" alt="KienlongBank Logo" class="hero-logo">
+        </div>
+      </div>
+      <h1>Hệ Thống Robo-Advisor Cá Nhân</h1>
+      <p>Giải pháp tư vấn vay vốn tự động 24/7 — gợi ý sản phẩm, số tiền đề xuất và lãi suất tham khảo</p>
+    </div>
+  </header>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="shell">
+    <div class="wizard">
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-title">TRÌNH TỰ TƯ VẤN</div>
+        <div class="step-list" id="stepList">
+          <div class="step-item active" data-step="1" onclick="goToStep(1)">
+            <div class="step-num" id="sn1">1</div>
+            <div class="step-txt"><strong>Hồ sơ</strong><span>Thông tin cá nhân</span></div>
+          </div>
+          <div class="step-item" data-step="2" onclick="goToStep(2)">
+            <div class="step-num" id="sn2">2</div>
+            <div class="step-txt"><strong>Khoản vay</strong><span>Nhu cầu vay</span></div>
+          </div>
+          <div class="step-item" data-step="3" onclick="goToStep(3)">
+            <div class="step-num" id="sn3">3</div>
+            <div class="step-txt"><strong>Tài chính</strong><span>DTI &amp; LTV</span></div>
+          </div>
+          <div class="step-item" data-step="4" onclick="goToStep(4)">
+            <div class="step-num" id="sn4">4</div>
+            <div class="step-txt"><strong>Tín dụng</strong><span>Lịch sử tín dụng</span></div>
+          </div>
+          <div class="step-item" data-step="5" onclick="goToStep(5)">
+            <div class="step-num" id="sn5">5</div>
+            <div class="step-txt"><strong>Kết quả</strong><span>Đề xuất cuối</span></div>
+          </div>
+        </div>
+
+        <div class="divider" style="opacity: 0.5;"></div>
+      </aside>
+
+      <!-- Main wizard card -->
+      <section class="main">
+        <div class="main-head">
+          <h2 id="mainTitle">Trang tư vấn khoản vay</h2>
+          <p id="mainSub">Nhập thông tin để hệ thống phân tích DTI, LTV và gợi ý sản phẩm vay phù hợp.</p>
+        </div>
+
+        <div class="content">
+
+          <!-- ======== STEP 1 ======== -->
+          <div class="step-panel active" id="panel-1">
+            <div class="grid">
+              <div class="field full">
+                <label for="hoTen">Tên khách hàng</label>
+                <input id="hoTen" type="text" placeholder="Nguyễn Văn A" />
+              </div>
+
+              <div class="field">
+                <label for="cccd">Số CCCD <span class="hint">(12 chữ số)</span></label>
+                <input id="cccd" type="text" inputmode="numeric" maxlength="12" placeholder="079300012345" />
+              </div>
+
+              <div class="field">
+                <label>Giới tính</label>
+                <div class="radio-row" id="genderGroup">
+                  <label class="pill active">
+                    <input type="radio" name="gioiTinh" value="Nam" checked>
+                    <span>👨 Nam</span>
+                  </label>
+                  <label class="pill">
+                    <input type="radio" name="gioiTinh" value="Nữ">
+                    <span>👩 Nữ</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="nhomTuoi">Nhóm tuổi</label>
+                <select id="nhomTuoi">
+                  <option value="duoi25">Dưới 25 tuổi</option>
+                  <option value="25_40" selected>Từ 25 đến 40 tuổi</option>
+                  <option value="tren40">Trên 40 tuổi</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="ngheNghiep">Nghề nghiệp</label>
+                <select id="ngheNghiep">
+                  <option value="hcsn">Hành chính sự nghiệp</option>
+                  <option value="hoi_doan">Hội đoàn / Tổ chức</option>
+                  <option value="kinh_doanh" selected>Kinh doanh / Tự doanh</option>
+                  <option value="tu_do">Lao động tự do</option>
+                  <option value="khac">Khác</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="actions">
+              <div></div>
+              <button class="btn btn-primary" onclick="nextStep(2)">Tiếp theo ➜</button>
+            </div>
+          </div>
+
+          <!-- ======== STEP 2 ======== -->
+          <div class="step-panel" id="panel-2">
+            <div class="grid">
+              <div class="field">
+                <label>Có tài sản đảm bảo?</label>
+                <div class="radio-row">
+                  <label class="pill" id="tsdbCo">
+                    <input type="radio" name="coTsdb" value="co">
+                    <span>🏠 Có</span>
+                  </label>
+                  <label class="pill active" id="tsdbKhong">
+                    <input type="radio" name="coTsdb" value="khong" checked>
+                    <span>❌ Không</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="hinhThucVay">Hình thức vay</label>
+                <select id="hinhThucVay">
+                  <option value="tin_chap" selected>Tín chấp</option>
+                  <option value="the_chap">Thế chấp</option>
+                </select>
+              </div>
+
+              <div class="field full">
+                <label for="mucDichVay">Mục đích sử dụng vốn</label>
+                <select id="mucDichVay"></select>
+              </div>
+
+              <div class="field">
+                <label for="soTienMuonVay">Số tiền muốn vay (VND)</label>
+                <input id="soTienMuonVay" type="text" placeholder="100,000,000" value="100,000,000"
+                  class="number-format" />
+                <div class="small-note" id="ltvSuggestion"></div>
+              </div>
+
+              <div class="field">
+                <label for="phuongThucTraNo">Phương thức thanh toán</label>
+                <select id="phuongThucTraNo"></select>
+              </div>
+
+              <div class="field full">
+                <label for="kyHanVay">Thời hạn vay</label>
+                <input id="kyHanVay" type="range" min="3" max="360" step="3" value="60"
+                  style="width: 100%; cursor: pointer;" />
+                <div class="small-note">Kỳ hạn: <strong id="kyHanLabel">60 tháng (5 năm)</strong></div>
+              </div>
+
+              <div class="field full">
+                <div id="expectedPaymentBox" class="success-box"
+                  style="display:none; justify-content:space-between; align-items:center;">
+                  <span id="paymentLabel" style="font-weight:700;">Dự tính số tiền trả mỗi kỳ:</span>
+                  <strong id="expectedPaymentValue" style="font-size:18px;">0 VND</strong>
+                </div>
+                <div id="paymentNote"
+                  style="display:none; margin-top:8px; color:#000; font-size:14px; font-weight:500;">
+                  * Đây là số tiền trả của tháng đầu tiên. Số tiền thanh toán sẽ giảm dần các tháng sau theo dư nợ thực
+                  tế.
+                </div>
+              </div>
+            </div>
+
+            <div class="hint-box" id="purposeHint" style="margin-top:14px;"></div>
+
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="nextStep(1)">⬅ Quay lại</button>
+              <button class="btn btn-primary" onclick="nextStep(3)">Tiếp theo ➜</button>
+            </div>
+          </div>
+
+          <div class="step-panel" id="panel-3">
+            <div class="grid">
+              <div class="field">
+                <label for="thuNhap">Tổng thu nhập hàng tháng (VND)</label>
+                <input id="thuNhap" type="text" placeholder="15,000,000" value="15,000,000" class="number-format" />
+              </div>
+
+              <div class="field">
+                <label for="traNoHangThang">Tiền trả nợ các khoản vay khác/tháng (VND)</label>
+                <input id="traNoHangThang" type="text" placeholder="0" value="0" class="number-format" />
+              </div>
+
+              <div class="field">
+                <label for="chiPhiSinhHoat">Tiền sinh hoạt hàng tháng (VND)</label>
+                <input id="chiPhiSinhHoat" type="text" placeholder="5,000,000" value="5,000,000"
+                  class="number-format" />
+              </div>
+
+              <div class="field">
+                <label for="soKhoanVayHienTai">Số khoản vay đang hoạt động</label>
+                <input id="soKhoanVayHienTai" type="number" min="0" step="1" value="0" />
+              </div>
+
+              <div class="field full" id="fieldGiaTriBds">
+                <label for="giaTriBds">Giá trị BĐS / Tài sản đảm bảo (VND)</label>
+                <input id="giaTriBds" type="text" placeholder="0" value="0" class="number-format" />
+              </div>
+
+              <div class="field full">
+                <div id="netIncomeBox" class="success-box"
+                  style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-weight:700;">Thu nhập ròng Còn lại (Dòng tiền):</span>
+                  <strong id="netIncomeValue" style="font-size:18px;">0 VND</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live DTI preview -->
+            <div id="dtiPreview" class="hint-box" style="margin-top:14px;"></div>
+            <!-- Live LTV preview -->
+            <div id="ltvPreview" class="hint-box" style="margin-top:14px; display:none;"></div>
+
+
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="nextStep(2)">⬅ Quay lại</button>
+              <button class="btn btn-primary" onclick="nextStep(4)">Tiếp theo ➜</button>
+            </div>
+          </div>
+
+          <!-- ======== STEP 4 ======== -->
+          <div class="step-panel" id="panel-4">
+            <div class="grid">
+              <div class="field full">
+                <label for="coNoXau">Lịch sử nợ xấu trong 05 năm gần nhất</label>
+                <select id="coNoXau">
+                  <option value="khong" selected>Không có</option>
+                  <option value="co">Có</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="chamThanhToan">Chậm thanh toán thẻ tín dụng trong 03 năm gần nhất</label>
+                <select id="chamThanhToan">
+                  <option value="khong" selected>Không có</option>
+                  <option value="co">Có</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="noCanChuY">Nợ cần chú ý trong vòng 12 tháng gần nhất</label>
+                <select id="noCanChuY">
+                  <option value="khong" selected>Không có</option>
+                  <option value="co">Có</option>
+                </select>
+              </div>
+
+              <div class="field full">
+                <div class="hint-box">
+                  <strong>Hệ thống sẽ tự động:</strong><br>
+                  • <strong>Từ chối</strong> hồ sơ nếu DTI vượt ngưỡng 70%<br>
+                  • <strong>Điều chỉnh</strong> số tiền vay nếu LTV vượt 80%<br>
+                  • <strong>Gợi ý sản phẩm</strong> vay phù hợp nhất qua mô hình AI (Random Forest)<br>
+                  • <strong>Trả về lãi suất</strong> tham khảo theo từng sản phẩm
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-secondary" onclick="nextStep(3)">⬅ Quay lại</button>
+              <button class="btn btn-primary" onclick="submitAssess()">🔍 Xem kết quả</button>
+            </div>
+          </div>
+
+          <!-- ======== STEP 5 ======== -->
+          <div class="step-panel" id="panel-5">
+
+            <!-- Loader -->
+            <div class="loader hide" id="loader">
+              <div class="spinner"></div>
+              <div style="font-weight:600;">Đang phân tích hồ sơ qua Decision Engine...</div>
+              <div class="small-note" style="margin-top:6px;">Tra cứu CIC → Tính DTI/LTV → Gợi ý sản phẩm → Ước tính lãi
+                suất</div>
+            </div>
+
+            <!-- Client message -->
+            <div id="clientMessage" class="hide" style="margin-bottom:14px;"></div>
+
+            <!-- Result card -->
+            <div class="result-card hide" id="resultCard">
+              <div class="result-head">
+                <div class="result-head-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M9 11l3 3L22 4" />
+                    <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                  </svg>
+                </div>
+                <div class="result-head-text">
+                  <h3>Kết quả phân tích hồ sơ</h3>
+                  <p id="resultSummary">Hồ sơ đã được xử lý thành công.</p>
+                </div>
+              </div>
+
+              <div class="result-body">
+                <div class="result-grid">
+                  <div class="metric neutral" id="metricDecision">
+                    <div class="k">Trạng thái hồ sơ</div>
+                    <div class="v">—</div>
+                    <div class="s">Kết luận từ hệ thống</div>
+                  </div>
+                  <div class="metric neutral" id="metricProduct">
+                    <div class="k">Sản phẩm gợi ý</div>
+                    <div class="v">—</div>
+                    <div class="s">Dự đoán từ mô hình AI</div>
+                  </div>
+                  <div class="metric neutral" id="metricRate">
+                    <div class="k">Lãi suất tham khảo</div>
+                    <div class="v">—</div>
+                    <div class="s">Theo sản phẩm gợi ý</div>
+                  </div>
+                  <div class="metric neutral" id="metricDTI">
+                    <div class="k">Kết quả DTI</div>
+                    <div class="v">—</div>
+                    <div class="s">Tỷ lệ nợ / thu nhập (≤70%)</div>
+                  </div>
+                  <div class="metric neutral" id="metricLTV">
+                    <div class="k">Kết quả LTV</div>
+                    <div class="v">—</div>
+                    <div class="s">Tỷ lệ vay / TSĐB (≤80%)</div>
+                  </div>
+                  <div class="metric neutral" id="metricLoan">
+                    <div class="k">Số tiền vay đề xuất</div>
+                    <div class="v">—</div>
+                    <div class="s">Sau khi điều chỉnh LTV</div>
+                  </div>
+                </div>
+
+                <!-- Monthly payment highlight -->
+                <div id="monthlyPayBox" class="hint-box hide" style="text-align:center;">
+                  <div style="font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px;">TRẢ GÓP ƯỚC TÍNH MỖI
+                    THÁNG</div>
+                  <div id="monthlyPayValue" style="font-size:28px;font-weight:900;color:#0f2f7a;"></div>
+                </div>
+
+                <!-- Detail summary -->
+                <div class="hint-box" id="detailBox"></div>
+
+                <!-- Reject / Adjust notices -->
+                <div class="warn-box hide" id="rejectBox"></div>
+                <div class="success-box hide" id="adjustBox"></div>
+              </div>
+            </div>
+
+            <!-- ── Required Documents Checklist ── -->
+            <div class="doc-section hide" id="docChecklist">
+              <div class="doc-section-head">
+                <div class="doc-section-head-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    <polyline points="10 9 9 9 8 9" />
+                  </svg>
+                </div>
+                <div>
+                  <h4>Hồ sơ cần thiết để làm thủ tục vay</h4>
+                  <p>Chuẩn bị đầy đủ các giấy tờ dưới đây trước khi đến chi nhánh KienlongBank PGD Hải Châu.</p>
+                </div>
+              </div>
+              <div class="doc-body" id="docBody"></div>
+            </div>
+
+            <div class="actions" style="margin-top:20px;">
+              <button class="btn btn-secondary" onclick="nextStep(4)">⬅ Quay lại</button>
+              <button class="btn btn-primary" onclick="lamMoi()">🔄 Nhập lại</button>
+            </div>
+          </div>
+
+        </div><!-- /content -->
+      </section>
+    </div><!-- /wizard -->
+  </main>
+
+  <div class="footer">
+    © 2026 KienlongBank — Robo-Advisor Demo &nbsp;|&nbsp; Powered by Random Forest (Accuracy 95.88%) &nbsp;|&nbsp; PGD
+    Hải Châu
+  </div>
+
+  <!-- ===================== SCRIPT ===================== -->
+  <script>
+    const API_BASE = (window.location.port === "" || window.location.port === "80" || window.location.port === "443")
+      ? window.location.origin
+      : "http://127.0.0.1:8000";
+
+    // Purpose options mapped to exact training-data values (sent to backend as code)
+    const purposeMap = {
+      tin_chap: [
+        { value: "hoi_phu_nu", text: "Hội Phụ Nữ" },
+        { value: "hoi_nong_dan", text: "Hội Nông dân" },
+        { value: "trong_lua", text: "Trồng lúa" },
+        { value: "hanh_chinh", text: "Hành chính sự nghiệp" },
+        { value: "luong_y_truong", text: "Chi lương / Y / Trường học" },
+      ],
+      the_chap: [
+        { value: "sxkd", text: "Sản xuất kinh doanh (SXKD)" },
+        { value: "doi_song", text: "Phục vụ đời sống" },
+        { value: "mua_xe", text: "Mua xe ô tô" },
+        { value: "xay_dung", text: "Xây dựng, sửa chữa nhà ở" },
+        { value: "bds", text: "Mua / chuyển nhượng BĐS" },
+      ],
+    };
+
+    const purposeHintMap = {
+      the_chap: "Vay <strong>Thế chấp</strong>: cần có bất động sản hoặc tài sản đảm bảo. Bao gồm các mục đích SXKD, mua xe, xây sửa nhà, BĐS, phục vụ đời sống.",
+    };
+
+    const RATE_TABLE_JS = {
+      hoi_phu_nu: 15.5,
+      hoi_nong_dan: 14.0,
+      trong_lua: 14.0,
+      hanh_chinh: 18.0,
+      luong_y_truong: 18.0,
+      sxkd: 13.0,
+      doi_song: 13.0,
+      mua_xe: 13.0,
+      xay_dung: 13.0,
+      bds: 13.0,
+    };
+
+    // ----------------------------------------------------------------
+    // Utility
+    // ----------------------------------------------------------------
+    function vnd(n) {
+      return Number(n || 0).toLocaleString("vi-VN") + " VND";
+    }
+    function round1(x) { return Math.round(Number(x) * 10) / 10; }
+
+    function rawNum(s) { return Number(String(s || "").replace(/,/g, "")) || 0; }
+
+    function formatNumber(s) {
+      let v = String(s).replace(/\D/g, "");
+      if (v === "") return "";
+      return Number(v).toLocaleString("en-US");
+    }
+
+    function handleNumberInput(e) {
+      let el = e.target;
+      let pos = el.selectionStart;
+      let oldL = el.value.length;
+      el.value = formatNumber(el.value);
+      let newL = el.value.length;
+      pos = pos + (newL - oldL);
+      el.setSelectionRange(pos, pos);
+    }
+
+    function getRadioValue(name) {
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : "";
+    }
+
+    function setActivePills() {
+      document.querySelectorAll("#genderGroup .pill").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll("input[name='gioiTinh']").forEach(r => {
+        if (r.checked) r.closest(".pill").classList.add("active");
+      });
+    }
+
+    // ----------------------------------------------------------------
+    // Purpose dropdown
+    // ----------------------------------------------------------------
+    function updatePurposeOptions() {
+      const loai = document.getElementById("hinhThucVay").value;
+      const sel = document.getElementById("mucDichVay");
+      sel.innerHTML = "";
+      purposeMap[loai].forEach(item => {
+        const opt = document.createElement("option");
+        opt.value = item.value;
+        opt.textContent = item.text;
+        sel.appendChild(opt);
+      });
+      document.getElementById("purposeHint").innerHTML = purposeHintMap[loai] || "";
+
+      // Sync coTsdb radio
+      const coRadio = document.querySelector("input[name='coTsdb'][value='co']");
+      const khongRadio = document.querySelector("input[name='coTsdb'][value='khong']");
+      if (loai === "the_chap") {
+        coRadio.checked = true;
+        document.getElementById("tsdbCo").classList.add("active");
+        document.getElementById("tsdbKhong").classList.remove("active");
+      } else {
+        khongRadio.checked = true;
+        document.getElementById("tsdbKhong").classList.add("active");
+        document.getElementById("tsdbCo").classList.remove("active");
+      }
+      updatePaymentMethods();
+    }
+
+    // ----------------------------------------------------------------
+    // Repayment Methods dropdown
+    // ----------------------------------------------------------------
+    function updatePaymentMethods() {
+      const purpose = document.getElementById("mucDichVay").value;
+      const sel = document.getElementById("phuongThucTraNo");
+      const oldVal = sel.value;
+      sel.innerHTML = "";
+
+      let options = [];
+      if (purpose === "sxkd") {
+        options = [
+          { value: "lai_thang_goc_cuoi_ky", text: "Lãi trả hàng tháng, gốc cuối kỳ" },
+          { value: "lai_quy_goc_cuoi_ky", text: "Lãi trả hàng quý, gốc cuối kỳ" },
+        ];
+      } else {
+        options = [
+          { value: "lai_thang_goc_chia_deu", text: "Lãi trả hàng tháng, gốc chia đều các kỳ" },
+          { value: "lai_quy_goc_chia_deu", text: "Lãi trả hàng quý, gốc chia đều các kỳ" },
+        ];
+      }
+
+      options.forEach(item => {
+        const opt = document.createElement("option");
+        opt.value = item.value;
+        opt.textContent = item.text;
+        sel.appendChild(opt);
+      });
+
+      // Try to preserve previous selection if possible, else default to first
+      if ([...sel.options].some(o => o.value === oldVal)) {
+        sel.value = oldVal;
+      }
+    }
+
+    // ----------------------------------------------------------------
+    // Loan Calculation (Real-time Step 2)
+    // ----------------------------------------------------------------
+    let currentExpectedMonthly = 0;
+
+    function calculateInstallment(principal, annualRatePct, months, method) {
+      if (months <= 0 || principal <= 0) return 0;
+      const r_annual = annualRatePct / 100;
+
+      if (method === "lai_thang_goc_chia_deu") {
+        return (principal / months) + (principal * r_annual / 12);
+      }
+      if (method === "lai_quy_goc_chia_deu") {
+        const quarters = Math.max(1, Math.floor(months / 3));
+        return ((principal / quarters) + (principal * r_annual / 4)) / 3;
+      }
+      if (method === "lai_thang_goc_cuoi_ky") {
+        return principal * r_annual / 12;
+      }
+      if (method === "lai_quy_goc_cuoi_ky") {
+        return (principal * r_annual / 4) / 3;
+      }
+      // PMT fallback
+      const r = r_annual / 12;
+      if (r === 0) return principal / months;
+      return principal * r * Math.pow(1 + r, months) / (Math.pow(1 + r, months) - 1);
+    }
+
+    function updateExpectedPayment() {
+      const amount = rawNum(document.getElementById("soTienMuonVay").value);
+      const months = Number(document.getElementById("kyHanVay").value);
+      const method = document.getElementById("phuongThucTraNo").value;
+      const purpose = document.getElementById("mucDichVay").value;
+
+      const rate = RATE_TABLE_JS[purpose] || 13.0;
+      const monthlyEquivalent = calculateInstallment(amount, rate, months, method);
+      currentExpectedMonthly = monthlyEquivalent;
+
+      const box = document.getElementById("expectedPaymentBox");
+      const note = document.getElementById("paymentNote");
+      const valEl = document.getElementById("expectedPaymentValue");
+      const labelEl = document.getElementById("paymentLabel");
+
+      if (amount > 0) {
+        box.style.display = "flex";
+        // Show note only for reducing balance methods
+        if (method.includes("_goc_chia_deu")) {
+          note.style.display = "block";
+        } else {
+          note.style.display = "none";
+        }
+
+        if (method.includes("_quy_")) {
+          labelEl.textContent = "Dự tính trả mỗi quý (BQ tháng):";
+          valEl.textContent = vnd(monthlyEquivalent * 3);
+        } else {
+          labelEl.textContent = "Dự tính trả mỗi tháng:";
+          valEl.textContent = vnd(monthlyEquivalent);
+        }
+      } else {
+        box.style.display = "none";
+        note.style.display = "none";
+      }
+      // Also update DTI preview if currently in Step 3
+      updateDTIPreview();
+    }
+
+    // ----------------------------------------------------------------
+    // DTI live preview
+    // ----------------------------------------------------------------
+    function updateDTIPreview() {
+      const income = rawNum(document.getElementById("thuNhap").value);
+      const otherDebt = rawNum(document.getElementById("traNoHangThang").value);
+      const living = rawNum(document.getElementById("chiPhiSinhHoat").value);
+
+      // Total Debt = Other Debt + New Expected Monthly
+      const totalDebtForDTI = otherDebt + currentExpectedMonthly;
+
+      // Update Net Income display: Net = Income - (Other Debt + New Debt) - Living
+      const netIncome = income - totalDebtForDTI - living;
+      const netBox = document.getElementById("netIncomeBox");
+      const netValEl = document.getElementById("netIncomeValue");
+      netValEl.textContent = vnd(netIncome);
+      if (netIncome < 0) {
+        netBox.className = "error-box";
+      } else {
+        netBox.className = "success-box";
+      }
+
+      const box = document.getElementById("dtiPreview");
+      if (income > 0) {
+        const dti = (totalDebtForDTI / income) * 100;
+        const cls = dti > 70 ? "color:#991b1b;" : dti > 50 ? "color:#8a4b00;" : "color:#065f46;";
+        box.innerHTML = `DTI dự kiến (bao gồm khoản vay này): <strong style="${cls}font-size:16px;">${round1(dti)}%</strong> &nbsp;(≤ 70% để được xét duyệt)`;
+        box.style.display = "block";
+      } else {
+        box.style.display = "none";
+      }
+    }
+
+    // ----------------------------------------------------------------
+    // LTV live check
+    // ----------------------------------------------------------------
+    function updateLTVSuggestion() {
+      const loai = document.getElementById("hinhThucVay").value;
+      const giaTri = rawNum(document.getElementById("giaTriBds").value);
+      let soTien = rawNum(document.getElementById("soTienMuonVay").value);
+      const note2 = document.getElementById("ltvSuggestion"); // Step 2
+      const note3 = document.getElementById("ltvPreview");   // Step 3
+
+      if (loai === "the_chap" && giaTri > 0) {
+        const maxSafe = Math.floor(giaTri * 0.8 / 1000000) * 1000000;
+        let html = "";
+        let color = "";
+
+        if (soTien > maxSafe) {
+          // Auto adjust
+          document.getElementById("soTienMuonVay").value = formatNumber(maxSafe);
+          soTien = maxSafe;
+          html = `⚠️ Vượt ngưỡng LTV 80%. Hệ thống đã tự động điều chỉnh số tiền vay về mức an toàn tối đa: <strong>${vnd(maxSafe)}</strong>`;
+          color = "#991b1b";
+          // Update other dependent fields (monthly pay, DTI)
+          updateExpectedPayment();
+        } else {
+          const ltv = (soTien / giaTri * 100).toFixed(1);
+          html = `✅ LTV hiện tại: <strong>${ltv}%</strong> — nằm trong ngưỡng an toàn (≤ 80%).`;
+          color = "#065f46";
+        }
+
+        note2.innerHTML = html;
+        note2.style.color = color;
+
+        note3.innerHTML = html;
+        note3.style.color = color;
+        note3.style.display = "block";
+        note3.className = soTien >= maxSafe && html.includes("⚠️") ? "warn-box" : "success-box";
+      } else {
+        note2.textContent = "";
+        note3.style.display = "none";
+      }
+    }
+
+    // ----------------------------------------------------------------
+    // Step navigation
+    // ----------------------------------------------------------------
+    let maxVisitedStep = 1;
+
+    function updateStepUI(step) {
+      document.querySelectorAll(".step-panel").forEach(p => p.classList.remove("active"));
+      document.getElementById(`panel-${step}`).classList.add("active");
+
+      document.querySelectorAll(".step-item").forEach((item, idx) => {
+        const n = idx + 1;
+        item.classList.remove("active", "done");
+        const numEl = document.getElementById(`sn${n}`);
+        if (n < step) { item.classList.add("done"); numEl.textContent = "✓"; }
+        else if (n === step) { item.classList.add("active"); numEl.textContent = n; }
+        else { numEl.textContent = n; }
+      });
+
+      // Update main header
+      const titles = [
+        "", "Chân dung khách hàng", "Nhu cầu vay",
+        "Tình hình tài chính", "Lịch sử tín dụng", "Kết quả tư vấn"
+      ];
+      const subs = [
+        "",
+        "Nhập thông tin cơ bản của khách hàng.",
+        "Xác định hình thức và mục đích vay.",
+        "Kiểm tra DTI, LTV và điều chỉnh khoản vay.",
+        "Đánh giá các ràng buộc lịch sử tín dụng.",
+        "Kết quả phân tích và gợi ý từ mô hình AI.",
+      ];
+      document.getElementById("mainTitle").textContent = `Bước ${step}: ${titles[step]}`;
+      document.getElementById("mainSub").textContent = subs[step];
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function goToStep(step) {
+      if (step <= maxVisitedStep) updateStepUI(step);
+    }
+
+    function nextStep(step) {
+      if (step > maxVisitedStep) maxVisitedStep = step;
+      updateStepUI(step);
+    }
+
+    // ----------------------------------------------------------------
+    // LTV adjustment
+    // ----------------------------------------------------------------
+    function adjustLoanByLTV() {
+      const loai = document.getElementById("hinhThucVay").value;
+      const giaTri = rawNum(document.getElementById("giaTriBds").value);
+      const soTien = rawNum(document.getElementById("soTienMuonVay").value);
+      if (loai !== "the_chap" || giaTri <= 0) return { adjusted: soTien, changed: false };
+      const maxSafe = Math.floor(giaTri * 0.8 / 1000000) * 1000000;
+      if (soTien > maxSafe) {
+        const el = document.getElementById("soTienMuonVay");
+        el.value = formatNumber(maxSafe);
+        return { adjusted: maxSafe, changed: true };
+      }
+      return { adjusted: soTien, changed: false };
+    }
+
+    // ----------------------------------------------------------------
+    // Build payload (all 5 steps)
+    // ----------------------------------------------------------------
+    function buildPayload() {
+      const loaiVay = document.getElementById("hinhThucVay").value;
+      const { adjusted } = adjustLoanByLTV();
+
+      const nhomTuoiVal = document.getElementById("nhomTuoi").value;
+      const ageMap = { "duoi25": 22, "25_40": 32, "tren40": 50 };
+
+      return {
+        ho_ten: document.getElementById("hoTen").value.trim() || "Khách hàng",
+        cccd: document.getElementById("cccd").value.trim(),
+        tuoi: ageMap[nhomTuoiVal] ?? 32,
+        gioi_tinh: getRadioValue("gioiTinh"),
+        nghe_nghiep: document.getElementById("ngheNghiep").value,
+
+        loai_vay: loaiVay,
+        san_pham_vay: document.getElementById("mucDichVay").value,
+        ky_han_thang: Number(document.getElementById("kyHanVay").value || 60),
+        phuong_thuc_tra_no: document.getElementById("phuongThucTraNo").value,
+        so_khoan_vay_hien_tai: Number(document.getElementById("soKhoanVayHienTai").value || 0),
+
+        thu_nhap_thang: rawNum(document.getElementById("thuNhap").value),
+        no_hien_tai_thang: rawNum(document.getElementById("traNoHangThang").value),
+        chi_phi_sinh_hoat: rawNum(document.getElementById("chiPhiSinhHoat").value),
+        so_tien_vay: adjusted,
+        gia_tri_tsdb: loaiVay === "the_chap" ? rawNum(document.getElementById("giaTriBds").value) : 0,
+
+        co_no_xau: document.getElementById("coNoXau").value === "co",
+        cham_thanh_toan: document.getElementById("chamThanhToan").value === "co",
+        no_can_chu_y: document.getElementById("noCanChuY").value === "co",
+      };
+    }
+
+    // ----------------------------------------------------------------
+    // Set metric helper
+    // ----------------------------------------------------------------
+    function setMetric(id, value, cls = "neutral") {
+      const box = document.getElementById(id);
+      box.className = `metric ${cls}`;
+      box.querySelector(".v").textContent = value;
+    }
+
+    function showMessage(type, html) {
+      const box = document.getElementById("clientMessage");
+      box.className = type;
+      box.innerHTML = html;
+    }
+
+    // ----------------------------------------------------------------
+    // Submit & display results
+    // ----------------------------------------------------------------
+    async function submitAssess() {
+      const cccd = document.getElementById("cccd").value.trim();
+      if (!/^\d{12}$/.test(cccd)) {
+        alert("Vui lòng nhập đúng CCCD gồm 12 chữ số (Bước 1).");
+        nextStep(1);
+        return;
+      }
+
+      nextStep(5);
+      maxVisitedStep = 5;
+
+      const loader = document.getElementById("loader");
+      const resultCard = document.getElementById("resultCard");
+      const clientMsg = document.getElementById("clientMessage");
+      const rejectBox = document.getElementById("rejectBox");
+      const adjustBox = document.getElementById("adjustBox");
+
+      loader.classList.remove("hide");
+      resultCard.classList.add("hide");
+      clientMsg.className = "hide";
+      rejectBox.classList.add("hide");
+      adjustBox.classList.add("hide");
+      document.getElementById("monthlyPayBox").classList.add("hide");
+
+      const payload = buildPayload();
+
+      try {
+        const res = await fetch(`${API_BASE}/api/v1/assess`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`Server lỗi ${res.status}: ${errText}`);
+        }
+
+        const data = await res.json();
+        loader.classList.add("hide");
+        resultCard.classList.remove("hide");
+
+        // Parse fields
+        const dti = data?.phan_tich?.dti?.dti_ratio ?? null;
+        const ltv = data?.phan_tich?.ltv?.ltv_ratio ?? null;
+        const safeAmt = data?.phan_tich?.toi_uu_khoan_vay?.vay_toi_da_an_toan ?? payload.so_tien_vay;
+        const ltvFixed = data?.phan_tich?.toi_uu_khoan_vay?.ltv_da_dieu_chinh ?? false;
+        const monthlyPay = data?.san_pham?.tra_gop_hang_thang ?? 0;
+        const product = data?.san_pham?.ten ?? "—";
+        const baseRate = data?.san_pham?.lai_suat_nam ?? null;
+        const promoRate = data?.san_pham?.lai_suat_uu_dai ?? null;
+        const promoPeriod = data?.san_pham?.thoi_gian_uu_dai_thang ?? null;
+        const decision = data?.ket_luan?.quyet_dinh ?? "—";
+        const reasons = Array.isArray(data?.ket_luan?.ly_do) ? data.ket_luan.ly_do : [data?.ket_luan?.ly_do ?? ""];
+
+        // Metric cards
+        const decisionUpper = decision.toUpperCase();
+        setMetric("metricDecision", decision,
+          decisionUpper.includes("TỪ CHỐI") ? "bad" :
+            decisionUpper.includes("XEM XÉT") ? "warn" : "good");
+
+        setMetric("metricProduct", product, "good");
+
+        const rateText = baseRate !== null ? `${baseRate}%/năm` : "—";
+        setMetric("metricRate", rateText, "good");
+
+        setMetric("metricDTI",
+          dti !== null ? `${round1(dti)}%` : "—",
+          dti === null ? "neutral" : dti > 70 ? "bad" : dti > 50 ? "warn" : "good");
+
+        setMetric("metricLTV",
+          ltv !== null ? `${round1(ltv)}%` : "—",
+          ltv === null ? "neutral" : ltv > 80 ? "bad" : ltv > 70 ? "warn" : "good");
+
+        setMetric("metricLoan", vnd(safeAmt),
+          safeAmt < payload.so_tien_vay ? "warn" : "good");
+
+        // Monthly payment highlight
+        if (monthlyPay > 0) {
+          document.getElementById("monthlyPayValue").textContent = vnd(monthlyPay);
+          document.getElementById("monthlyPayBox").classList.remove("hide");
+        }
+
+        // Summary
+        document.getElementById("resultSummary").textContent =
+          `Hồ sơ của ${payload.ho_ten} (CCCD: ${payload.cccd}) đã được xử lý.`;
+
+        // Detail box
+        document.getElementById("detailBox").innerHTML = `
+        <strong>Tóm tắt hồ sơ:</strong><br>
+        • Thu nhập: <strong>${vnd(payload.thu_nhap_thang)}</strong><br>
+        • Khoản vay đề xuất: <strong>${vnd(safeAmt)}</strong> — ${payload.ky_han_thang} tháng<br>
+        • Lãi suất tham khảo: <strong>${baseRate !== null ? baseRate + "%/năm" : "—"}</strong><br>
+        • Trả góp ước tính: <strong>${monthlyPay ? vnd(monthlyPay) + "/tháng" : "—"}</strong><br>
+        • Lý do: ${reasons.join(" | ")}
+      `;
+
+        // Decision notice
+        if (decisionUpper.includes("TỪ CHỐI")) {
+          rejectBox.innerHTML = `<strong>Hồ sơ bị từ chối.</strong> ${reasons.join(" ")}`;
+          rejectBox.classList.remove("hide");
+          showMessage("error-box", "⛔ Hồ sơ không đáp ứng tiêu chí xét duyệt. Xem chi tiết bên dưới.");
+        } else if (ltvFixed) {
+          adjustBox.innerHTML = `✅ Số tiền vay đã được điều chỉnh về <strong>${vnd(safeAmt)}</strong> để đảm bảo ngưỡng LTV 80%.`;
+          adjustBox.classList.remove("hide");
+          showMessage("success-box", `✅ Hồ sơ của <strong>${payload.ho_ten}</strong> đã được xử lý thành công với DTI đạt chuẩn.`);
+        } else {
+          showMessage("success-box", `✅ Hồ sơ của <strong>${payload.ho_ten}</strong> đã được xử lý thành công.`);
+        }
+
+        // Required documents checklist
+        renderDocumentChecklist(payload.loai_vay, payload.san_pham_vay, decision);
+
+      } catch (err) {
+        loader.classList.add("hide");
+        resultCard.classList.remove("hide");
+        showMessage("error-box",
+          `❌ Không thể kết nối backend tại <strong>${API_BASE}</strong>.<br>
+         Hãy chạy: <code>uvicorn main:app --reload --port 8000</code> từ thư mục <code>backend/</code>.<br>
+         Chi tiết: ${err.message}`);
+      }
+    }
+
+    // ----------------------------------------------------------------
+    // Document checklist
+    // ----------------------------------------------------------------
+    const BASE_DOCS = {
+      phapLy: {
+        icon: "📋",
+        title: "Hồ sơ Pháp lý",
+        items: [
+          "CCCD gắn chip còn hiệu lực của người vay (và hôn phối nếu có).",
+          "Giấy đăng ký kết hôn hoặc xác nhận tình trạng độc thân.",
+          "Hộ khẩu thường trú hoặc giấy xác nhận cư trú.",
+        ],
+      },
+      thuNhap: {
+        icon: "📄",
+        title: "Hồ sơ Thu nhập",
+        items: [
+          "Hợp đồng lao động hoặc Quyết định bổ nhiệm còn hiệu lực.",
+          "Sao kê lương / tài khoản 3–6 tháng gần nhất.",
+        ],
+      },
+    };
+
+    const PURPOSE_EXTRA_DOCS = {
+      // Thế chấp
+      sxkd: [
+        "Giấy phép kinh doanh / Đăng ký kinh doanh.",
+        "Phương án sản xuất kinh doanh.",
+        "Hóa đơn, hợp đồng mua bán đầu vào/đầu ra (6 tháng gần nhất).",
+      ],
+      doi_song: [
+        "Phương án sử dụng vốn vay (mô tả mục đích cụ thể).",
+      ],
+      mua_xe: [
+        "Báo giá xe từ đại lý chính hãng.",
+        "Hợp đồng mua bán xe (nếu đã ký).",
+      ],
+      xay_dung: [
+        "Giấy phép xây dựng (bản sao).",
+        "Bản vẽ thiết kế và dự toán công trình được duyệt.",
+      ],
+      bds: [
+        "Hợp đồng mua bán / chuyển nhượng BĐS (bản nháp hoặc đặt cọc).",
+        "Giấy tờ pháp lý tài sản mua (Sổ hồng / Sổ đỏ bên bán).",
+      ],
+      // Tín chấp
+      hoi_phu_nu: [
+        "Giấy xác nhận thành viên Hội Phụ Nữ (có xác nhận của BCH Hội).",
+        "Xác nhận của chính quyền địa phương (UBND phường/xã).",
+      ],
+      hoi_nong_dan: [
+        "Giấy xác nhận thành viên Hội Nông dân.",
+        "Xác nhận của chính quyền địa phương.",
+      ],
+      trong_lua: [
+        "Giấy xác nhận diện tích canh tác (do UBND xã cấp).",
+        "Hợp đồng thuê đất / giấy chứng nhận quyền sử dụng đất (nếu có).",
+      ],
+      hanh_chinh: [
+        "Quyết định tuyển dụng / bổ nhiệm công chức, viên chức.",
+        "Thẻ công chức / viên chức còn hiệu lực.",
+      ],
+      luong_y_truong: [
+        "Hợp đồng lao động với đơn vị chi lương / trường học / bệnh viện.",
+        "Thẻ nhân viên / xác nhận công tác của đơn vị.",
+      ],
+    };
+
+    function buildDocumentChecklist(loaiVay, sanPhamVay) {
+      const groups = [];
+
+      // Group 1: Pháp lý
+      groups.push({ ...BASE_DOCS.phapLy });
+
+      // Group 2: Thu nhập
+      groups.push({ ...BASE_DOCS.thuNhap });
+
+      // Group 3: Mục đích vay
+      const purposeItems = PURPOSE_EXTRA_DOCS[sanPhamVay] || [];
+      const tsdbItems = loaiVay === "the_chap"
+        ? [
+          "Sổ hồng / Sổ đỏ tài sản đảm bảo (bản sao công chứng).",
+          "Giấy chứng nhận quyền sở hữu / sử dụng tài sản.",
+        ]
+        : [];
+
+      const allPurposeDocs = [...tsdbItems, ...purposeItems];
+      if (allPurposeDocs.length > 0) {
+        groups.push({
+          icon: "📁",
+          title: "Hồ sơ Mục đích vay",
+          items: allPurposeDocs,
+        });
+      }
+
+      return groups;
+    }
+
+    function renderDocumentChecklist(loaiVay, sanPhamVay, decision) {
+      const section = document.getElementById("docChecklist");
+      if (decision.toUpperCase().includes("TỪ CHỐI")) {
+        section.classList.add("hide");
+        return;
+      }
+
+      const groups = buildDocumentChecklist(loaiVay, sanPhamVay);
+      const body = document.getElementById("docBody");
+
+      body.innerHTML = groups.map(g => `
+      <div class="doc-group">
+        <div class="doc-group-title"><span class="icon">${g.icon}</span>${g.title}</div>
+        <ul class="doc-list">
+          ${g.items.map(item => `<li>${item}</li>`).join("")}
+        </ul>
+      </div>
+    `).join("") + `
+      <div class="hint-box" style="font-size:12px;color:var(--muted);">
+        <strong style="color:#0f2f7a;">Lưu ý:</strong>
+        Mang bản gốc để đối chiếu cùng với bản sao công chứng.
+        Thời gian xử lý hồ sơ thông thường từ <strong>3–5 ngày làm việc</strong>.
+        Liên hệ <strong>KienlongBank PGD Hải Châu</strong> để được hỗ trợ tư vấn trực tiếp.
+      </div>
+    `;
+
+      section.classList.remove("hide");
+    }
+
+    // ----------------------------------------------------------------
+    // Reset
+    // ----------------------------------------------------------------
+    function lamMoi() {
+      document.getElementById("hoTen").value = "";
+      document.getElementById("cccd").value = "";
+      document.getElementById("nhomTuoi").value = "25_40";
+      document.getElementById("ngheNghiep").value = "kinh_doanh";
+      document.querySelector("input[name='gioiTinh'][value='Nam']").checked = true;
+      setActivePills();
+      document.getElementById("hinhThucVay").value = "tin_chap";
+      updatePurposeOptions();
+      updatePaymentMethods();
+      document.getElementById("soKhoanVayHienTai").value = 0;
+      document.getElementById("kyHanVay").value = 60;
+      document.getElementById("kyHanLabel").textContent = "60 tháng";
+      document.getElementById("thuNhap").value = "15,000,000";
+      document.getElementById("traNoHangThang").value = "0";
+      document.getElementById("chiPhiSinhHoat").value = "5,000,000";
+      document.getElementById("soTienMuonVay").value = "100,000,000";
+      document.getElementById("giaTriBds").value = "0";
+      document.getElementById("coNoXau").value = "khong";
+      document.getElementById("chamThanhToan").value = "khong";
+      document.getElementById("noCanChuY").value = "khong";
+      updateLTVSuggestion();
+      updateExpectedPayment();
+      updateDTIPreview();
+      document.getElementById("loader").classList.add("hide");
+      document.getElementById("resultCard").classList.add("hide");
+      document.getElementById("clientMessage").className = "hide";
+      document.getElementById("rejectBox").classList.add("hide");
+      document.getElementById("adjustBox").classList.add("hide");
+      document.getElementById("monthlyPayBox").classList.add("hide");
+      document.getElementById("docChecklist").classList.add("hide");
+      maxVisitedStep = 1;
+      updateStepUI(1);
+    }
+
+    // ----------------------------------------------------------------
+    // Event listeners
+    // ----------------------------------------------------------------
+    document.querySelectorAll("input[name='gioiTinh']").forEach(r =>
+      r.addEventListener("change", setActivePills));
+
+    document.querySelectorAll("input[name='coTsdb']").forEach(r => {
+      r.addEventListener("change", () => {
+        document.querySelectorAll(".pill").forEach(p => {
+          if (p.id === "tsdbCo" || p.id === "tsdbKhong") p.classList.remove("active");
+        });
+        r.closest(".pill").classList.add("active");
+        if (r.value === "co") {
+          document.getElementById("hinhThucVay").value = "the_chap";
+        } else {
+          document.getElementById("hinhThucVay").value = "tin_chap";
+        }
+        updatePurposeOptions();
+      });
+    });
+
+    document.getElementById("hinhThucVay").addEventListener("change", updatePurposeOptions);
+    document.getElementById("mucDichVay").addEventListener("change", updatePaymentMethods);
+
+    document.getElementById("kyHanVay").addEventListener("input", e => {
+      const m = Number(e.target.value);
+      const yr = (m / 12).toFixed(1).replace(".0", "");
+      document.getElementById("kyHanLabel").textContent = `${m} tháng${m >= 12 ? ` (${yr} năm)` : ""}`;
+    });
+
+    document.getElementById("thuNhap").addEventListener("input", updateDTIPreview);
+    document.getElementById("traNoHangThang").addEventListener("input", updateDTIPreview);
+    document.getElementById("chiPhiSinhHoat").addEventListener("input", updateDTIPreview);
+
+    document.getElementById("soTienMuonVay").addEventListener("input", () => {
+      updateLTVSuggestion();
+      updateExpectedPayment();
+    });
+    document.getElementById("giaTriBds").addEventListener("input", updateLTVSuggestion);
+
+    document.getElementById("kyHanVay").addEventListener("input", updateExpectedPayment);
+    document.getElementById("phuongThucTraNo").addEventListener("change", updateExpectedPayment);
+    document.getElementById("mucDichVay").addEventListener("change", () => {
+      updatePaymentMethods();
+      updateExpectedPayment();
+    });
+
+    document.querySelectorAll(".number-format").forEach(el => {
+      el.addEventListener("input", handleNumberInput);
+    });
+
+    // ----------------------------------------------------------------
+    // Init
+    // ----------------------------------------------------------------
+    updatePurposeOptions();
+    updatePaymentMethods();
+    setActivePills();
+    updateExpectedPayment();
+    updateDTIPreview();
+  </script>
+</body>
+
+</html>
